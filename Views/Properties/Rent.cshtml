@@ -1,0 +1,87 @@
+﻿@model realEstate1.Models.RentViewModel
+
+@{
+    var bookedDates = ViewBag.BookedDates as List<string>;
+}
+
+<h2>@Model.Address</h2>
+<p>@Model.Description</p>
+<p>@Model.terms</p>
+<p>Price per Day: @Model.PricePerDay</p>
+
+<form asp-action="Rent" method="post" id="rentForm">
+    <input type="hidden" asp-for="PropertyId" />
+    <input type="hidden" asp-for="OwnerId" />
+    <input type="hidden" asp-for="terms" />
+
+    <div class="form-group col-3">
+        <label asp-for="StartDate"></label>
+        <input asp-for="StartDate" id="startDate" type="date" min="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control" />
+        <span asp-validation-for="StartDate" class="text-danger"></span>
+        <span class="text-danger d-block" id="startDateError"></span>
+    </div>
+
+    <div class="form-group col-3 mt-2">
+        <label asp-for="EndDate"></label>
+        <input asp-for="EndDate" id="endDate" type="date" min="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control" />
+        <span asp-validation-for="EndDate" class="text-danger"></span>
+        <span class="text-danger d-block" id="endDateError"></span>
+    </div>
+
+    <button class="btn btn-primary mt-3" type="submit">Proceed To Pay</button>
+</form>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var bookedDates = new Set(@Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(bookedDates)));
+
+        function formatDate(date) {
+            return date.toISOString().split('T')[0];
+        }
+
+        function hasBookedDatesInRange(start, end) {
+            let current = new Date(start);
+            while (current <= end) {
+                if (bookedDates.has(formatDate(current))) return true;
+                current.setDate(current.getDate() + 1);
+            }
+            return false;
+        }
+
+        function validateDates() {
+            let startInput = document.getElementById("startDate");
+            let endInput = document.getElementById("endDate");
+            let startError = document.getElementById("startDateError");
+            let endError = document.getElementById("endDateError");
+
+            startError.textContent = "";
+            endError.textContent = "";
+
+            if (!startInput.value || !endInput.value) return true;
+
+            let startDate = new Date(startInput.value);
+            let endDate = new Date(endInput.value);
+
+            if (endDate < startDate) {
+                endError.textContent = "End date must be after start date.";
+                return false;
+            }
+
+            if (hasBookedDatesInRange(startDate, endDate)) {
+                endError.textContent = "The selected range includes booked dates. Please choose another.";
+                return false;
+            }
+
+            return true;
+        }
+
+        document.getElementById("startDate").addEventListener("change", validateDates);
+        document.getElementById("endDate").addEventListener("change", validateDates);
+
+        document.getElementById("rentForm").addEventListener("submit", function (e) {
+            if (!validateDates()) {
+                e.preventDefault();
+            }
+        });
+    });
+</script>

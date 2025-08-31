@@ -1,0 +1,45 @@
+﻿@model IEnumerable<realEstate1.Models.Property>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1 class="text-center my-4">Property Listings</h1>
+
+<p class="text-right">
+    <a asp-action="Create" class="btn btn-primary">Create New</a>
+</p>
+
+<table class="table table-striped table-bordered table-hover">
+    <thead class="thead-dark">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Address)
+            </th>
+            
+            <th>
+                @Html.DisplayNameFor(model => model.Type)
+            </th>
+            <th class="text-center">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Address)
+                </td>
+                
+                <td>
+                    @Html.DisplayFor(modelItem => item.Type)
+                </td>
+                <td class="text-center">
+                    <a asp-action="Edit" asp-route-id="@item.PropertyID" class="btn btn-warning btn-sm">Edit</a>
+                    <a asp-action="Details" asp-route-id="@item.PropertyID" class="btn btn-info btn-sm">Details</a>
+                    <a asp-action="Delete" asp-route-id="@item.PropertyID" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this property?');">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

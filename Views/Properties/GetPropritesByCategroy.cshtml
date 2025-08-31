@@ -1,0 +1,43 @@
+﻿@model IEnumerable<realEstate1.Models.Property>
+
+@{
+    ViewData["Title"] = "Properties by Category";
+}
+
+<div class="container">
+    <h2>Available Properties in @ViewData["Category"]</h2>
+    <div class="row">
+        @foreach (var property in Model)
+        {
+            <div class="col-sm-6 col-lg-4 mb-4">
+                <div class="card shadow-sm h-100">
+
+                    <div class="d-flex justify-content-center align-items-center" style="height: 200px;">
+                        <img style="width: 100%; height: 100%; max-width: 250px; object-fit: cover;"
+
+                        src="@Url.Content("~/images/" +
+                            (property.PropertiesImages != null && property.PropertiesImages.Any() ?
+                            property.PropertiesImages.FirstOrDefault().ImagePath : "default-image.jpg"))"
+                        alt="Property Image" class="img-fluid rounded" />
+                    </div>
+                    <div class="card-body">
+
+                        <h4 class="card-text text-center text-muted">Price: @property.PricePerDay.ToString("C") per day</h4>
+                        <h5 class="card-title text-center">@property.Address</h5>
+
+                        <div class="d-flex justify-content-center">
+                            <a href="@Url.Action("Details", "Properties", new { id = property.PropertyID })" class="btn btn-success mx-2 px-4 py-1">
+                                <i class="fas fa-info-circle"></i> Details
+                            </a>
+                            <a href="@Url.Action("Rent", "Properties", new { id = property.PropertyID })" class="btn btn-outline-dark mx-2 px-4 py-1">
+                                <i class="fas fa-handshake"></i> Rent
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+        
+    </div>
+</div>

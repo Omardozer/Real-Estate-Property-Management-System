@@ -1,0 +1,70 @@
+﻿@model IEnumerable<realEstate1.Models.Property>
+
+@if(Model != null && Model.Any())
+{
+    <div class="d-flex flex-row gap-4 justify-content-start flex-wrap">
+        @foreach(var property in Model)
+        {
+            <div class="mb-4 flex-fill flex-md-grow-0" style="width:300px;height:400px">
+                <div class="card h-100 shadow-sm">
+                    @if(property.PropertiesImages != null && property.PropertiesImages.Any())
+                    {
+                        var carouselId = "carousel-" + property.PropertyID; // unique id per property
+
+                        <div id="@carouselId" class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-inner">
+                                @foreach(var image in property.PropertiesImages.Select((img , index) => new { img , index }))
+                                {
+                                    <div class="carousel-item @(image.index == 0 ? "active" : "")">
+                                        <img src="@Url.Content("~/images/" + image.img.ImagePath)"
+                                             class="d-block w-100"
+                                             style="height: 200px; object-fit: cover;"
+                                             alt="Property Image">
+                                    </div>
+                                }
+                            </div>
+
+                            <!-- Carousel controls -->
+                            <button class="carousel-control-prev" type="button" data-bs-target="#@carouselId" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon"></span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#@carouselId" data-bs-slide="next">
+                                <span class="carousel-control-next-icon"></span>
+                            </button>
+                        </div>
+                    }
+                    else
+                    {
+                        <img src="~/images/no-image.jpeg"
+                             class="card-img-top"
+                             style="width: 100%; height: 200px; object-fit: cover;"
+                             alt="No Image" />
+                    }
+                    <div class="card-body">
+                        <p class="badge bg-warning text-black bg-opacity-25 p-2">@property.Type</p>
+
+                        <h5 class="card-title p-1" style="white-space:nowrap;overflow: hidden; text-overflow: ellipsis;">@property.Address</h5>
+                        <div class="d-flex gap-4">
+                            <p class="card-text m-1"><i class="fi fi-rr-usd-circle"></i> @property.PricePerDay <span class="text-black-50">/day</span></p>
+                            <p class="card-text m-1"><i class="fi fi-rr-bed-empty"></i> @property.Bedrooms</p>
+                            <p class="card-text m-1"><i class="fi fi-rr-bath"></i>  @property.Bathrooms</p>
+                        </div>
+                        
+
+                    </div>
+
+                    <div class="d-flex mx-3 mb-4 justify-content-around btn-group gap-2">
+                        <a asp-controller="Properties" asp-action="Details" asp-route-id="@property.PropertyID"
+                           class="btn btn-light btn flex-grow-0 px-4">View Details</a>
+                        <a asp-controller="Properties" asp-action="Rent" asp-route-id="@property.PropertyID"
+                           class="btn btn-primary btn flex-fill flex-grow-1">Rent</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="alert alert-info">No properties found.</div>
+}

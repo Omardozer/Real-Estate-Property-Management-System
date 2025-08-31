@@ -1,0 +1,67 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+@model IEnumerable<realEstate1.Models.Property>
+<div class="container-fluid p-0">
+    <!-- Hero Section (Jumbotron) -->
+    <div class=" bg-light text-dark"
+         style="display: flex; justify-content: center; align-items: center; text-align: center;">
+        <div style="padding: 50px;">
+            <h1 class="display-4">Welcome to RentEase</h1>
+            <p class="lead">At RentEase, we specialize in connecting property owners with renters. Whether you're looking for a new place to call home or have a property to rent out, we've got you covered. Discover the perfect rental properties or list your own with ease today!</p>
+            <hr class="my-4">
+            <p>Are you a property owner? Click the button below to list your property and start reaching potential tenants right away.</p>
+            <p class="lead">
+                <a class="btn btn-lg btn-success text-white px-5 py-3 shadow-lg" href="@Url.Action("Create", "Properties")" role="button">
+                    <i class="fi fi-rr-home me-2"></i><span> Add Your Property Now</span>
+                </a>
+            </p>
+        </div>
+    </div>
+
+
+    <div class="container mt-4">
+        <h2 class="mb-4">Available Properties</h2>
+        <form id="filterForm" asp-controller="Home" asp-action="GetProperties" method="post" class="d-flex flex-row gap-2 m-4">
+            <input type="text" name="search" placeholder="Search address..." class="form-control" />
+            <select name="category" class="form-select form-control">
+                <option value="">All</option>
+                <option value="Apartments">Apartments</option>
+                <option value="Villas">Villas</option>
+                <option value="Vacation Homes">Vacation Houses</option>
+            </select>
+            <input type="number" name="minPrice" placeholder="Min Price" class="form-control" />
+            <input type="number" name="maxPrice" placeholder="Max Price" class="form-control" />
+            <input type="number" name="bedrooms" placeholder="Bedrooms" class="form-control" />
+            <input type="number" name="bathrooms" placeholder="Bathrooms" class="form-control" />
+        </form>
+
+
+        <div id="property-results">
+            @Html.Partial("_PropertyListPartial" , Model)
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.getElementById("filterForm");
+        const resultsContainer = document.getElementById("property-results");
+
+        form.addEventListener("input", handleFormChange);
+        form.addEventListener("change", handleFormChange);
+
+        function handleFormChange() {
+            const formData = new FormData(form);
+
+            fetch("@Url.Action("GetProperties" , "Home")", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.text())
+            .then(html => {
+                resultsContainer.innerHTML = html;
+            })
+            .catch(error => console.error("Error loading properties:", error));
+        }
+    });
+</script>

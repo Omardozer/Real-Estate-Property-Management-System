@@ -1,0 +1,44 @@
+﻿@model IEnumerable<realEstate1.Models.LeaseViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Leases</h1>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Property Address</th>
+            <th>Tenant Name</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PropertyAddress)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TenantName)
+                </td>
+                <td>
+                    @item.StartDate.ToShortDateString() 
+                </td>
+                <td>
+                    @item.EndDate.ToShortDateString() 
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.LeaseID">Edit</a> |
+
+                    <a asp-action="Delete" asp-route-id="@item.LeaseID">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
