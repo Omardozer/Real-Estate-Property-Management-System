@@ -18,7 +18,7 @@ A web-based property management platform built with **ASP.NET Core MVC**, design
 ---
 
 ## 🛠️ Tech Stack
-- **Backend**: ASP.NET Core MVC (.NET 6)  
+- **Backend**: ASP.NET Core MVC
 - **Frontend**: Razor Views, Bootstrap, jQuery  
 - **Database**: Microsoft SQL Server  
 - **ORM**: Entity Framework Core  
